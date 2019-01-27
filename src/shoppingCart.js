@@ -11,7 +11,7 @@ module.exports = {
 
     add(item, promoCode) {
       if(promoCode) {
-        this.promoCode
+        this.promoCode = promoCode
       }
       this.items.push(item)
       
@@ -20,8 +20,25 @@ module.exports = {
 
     recompute() {
       const total = this.items.reduce((a,c) => a + c.price, 0);
-      const discounts = this.pricingRules.map(rule => rule(this))
+      const discounts = this.pricingRules.map(rule => {
+        if(typeof rule ===  'function') {
+           return rule(this)
+        }
+        return 0
+      })
       const totalDiscounts = discounts.reduce((a,c) => a + c)
-      this.total = total - totalDiscounts
+      this.total = Number.parseFloat(total - totalDiscounts).toFixed(2)
+      
+      this.applyPromo()
+    },
+
+    // every checkout will only have one promo code
+    applyPromo() {
+      if (this.promoCode) {
+        const promo = this.pricingRules.find(rule => rule.promoCode === this.promoCode)
+        if (promo) {
+            promo.apply(this)
+        }
+      }
     }
 }
