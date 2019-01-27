@@ -9,6 +9,11 @@ module.exports = {
       return this
     },
 
+    /**
+     * 
+     * @param {*} item Product
+     * @param {*} promoCode string
+     */
     add(item, promoCode) {
       if(promoCode) {
         this.promoCode = promoCode
