@@ -3,6 +3,8 @@ module.exports = {
     promoCode: '',
     pricingRules: [],
     total: 0,
+    purchasedItems: [],
+    freebies: [],
 
     new(pricingRules) {
       this.pricingRules = pricingRules
@@ -18,23 +20,36 @@ module.exports = {
       if(promoCode) {
         this.promoCode = promoCode
       }
-      this.items.push(item)
+      this.purchasedItems.push(item)
       
-      this.recompute()
+      this.recompute(item)
     },
 
-    recompute() {
-      const total = this.items.reduce((a,c) => a + c.price, 0);
-      const discounts = this.pricingRules.map(rule => {
+    recompute(item) {
+      const rules = this.pricingRules.map(rule => {
         if(typeof rule ===  'function') {
-           return rule(this)
+           return rule(this, item)
         }
         return 0
       })
+
+      // console.log(rules)
+      this.applyFreebies(rules)
+      this.applyDiscount(rules)
+      this.applyPromo()
+    },
+
+    applyFreebies(rules) {
+      const freebies = rules.filter(rule => typeof rule === 'object' && rule.type === 'product')
+      const flattendFreebies = freebies.reduce((a, c)=> a.concat(c.products), [])
+      // console.log(flattendFreebies)
+      this.items = this.purchasedItems.concat(flattendFreebies)
+    },
+    applyDiscount(rules) {
+      const total = this.purchasedItems.reduce((a,c) => a + c.price, 0);
+      const discounts = rules.filter(rule => typeof rule === 'number')
       const totalDiscounts = discounts.reduce((a,c) => a + c)
       this.total = Number.parseFloat(total - totalDiscounts).toFixed(2)
-      
-      this.applyPromo()
     },
 
     // every checkout will only have one promo code

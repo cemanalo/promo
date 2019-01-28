@@ -41,7 +41,9 @@ describe('Shopping Cart', () => {
       cart.add(products[1])
       cart.add(products[1])
 
+      const free1gb = cart.items.filter(item => item.code === '1gb')
       assert.equal(cart.total, 84.70)
+      assert.equal(free1gb.length, 2)
     })
   })
 

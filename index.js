@@ -14,6 +14,7 @@ const cart = ShoppingCart.new(pricingRules)
 // cart.add(products['0'])
 // cart.add(products['3'], 'I<3AMAYSIM')
 
+// Scenario 3
 cart.add(products[0])
 cart.add(products[1])
 cart.add(products[1])
