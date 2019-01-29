@@ -12,9 +12,11 @@ Tested on NodeJs 10.13.0
 
 ## Instruction
 1. Open index.js
-2. Add product base on the product code
+2. Add product base on the product mapping
 3. Run `node .`
 
 ### Using unit test
 Files are located under test directory
-Run `npm test`
+1. Run `npm i` to install dependencies
+2. Run `npm test`
+
